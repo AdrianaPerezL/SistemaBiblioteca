@@ -1,4 +1,8 @@
 import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Biblioteca {
 
@@ -77,6 +81,65 @@ public class Biblioteca {
     public void listarLibros() {
         for (Libro l : libros) {
             System.out.println(l);
+        }
+
+    }
+    public void listarPorGenero(String genero) {
+        for (Libro l : libros) {
+            if (l.getGenero().equalsIgnoreCase(genero)) {
+                System.out.println(l);
+            }
+        }
+    }
+    public void listarPorAutor(String autor) {
+        for (Libro l : libros) {
+            if (l.getAutor().equalsIgnoreCase(autor)) {
+                System.out.println(l);
+            }
+        }
+    }
+    public void listarDisponibles() {
+        for (Libro l : libros) {
+            if (l.isDisponible()) {
+                System.out.println(l);
+            }
+        }
+    }
+    public void guardarLibros() {
+
+        try {
+            FileWriter fw = new FileWriter("libros.txt");
+
+            for (Libro l : libros) {
+                fw.write(l.getTitulo() + "," + l.getAutor() + "," + l.getAnioPublicacion() + "," + l.getGenero() + "," + l.isDisponible() + "\n");
+            }
+
+            fw.close();
+
+        } catch (Exception e) {
+            System.out.println("Error al guardar");
+        }
+    }
+    public void cargarLibros() {
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("libros.txt"));
+            String linea;
+
+            while ((linea = br.readLine()) != null) {
+
+                String[] datos = linea.split(",");
+
+                Libro libro = new Libro(datos[0], datos[1], Integer.parseInt(datos[2]), datos[3]);
+                libro.setDisponible(Boolean.parseBoolean(datos[4]));
+
+                libros.add(libro);
+            }
+
+            br.close();
+
+        } catch (Exception e) {
+            System.out.println("No hay archivo guardado");
         }
     }
 }
